@@ -16,13 +16,13 @@ export default {
     try {
         const url = new URL(request.url);
 
-        const exit = url.searchParams.get("exit") ?? "0"; // defaults to exit 0
-        const priority = url.searchParams.get("priority") === "true"; // defaults to false
-
         const line = requireParam(url, "line");
         const origin = requireParam(url, "origin");
         const destination = requireParam(url, "destination");
         const carConfig = requireParam(url, "carConfig");
+
+        const exit = url.searchParams.get("exit") ?? "0"; // defaults to exit 0
+        const priority = url.searchParams.get("priority") === "true"; // defaults to false
 
         const assetUrl = new URL(`/data/${line}.json`, request.url)
         const dataResponse = await env.ASSETS.fetch(
