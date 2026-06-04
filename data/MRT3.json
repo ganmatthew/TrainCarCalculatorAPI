@@ -1,0 +1,135 @@
+[
+    {
+        "line": "MRT-3",
+        "numberOfCars": [3, 4],
+        "directions": ["north", "south"],
+        "stations": [
+          {
+            "name": "North Avenue",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "north": [[3]],
+              "south": [[]]
+            }
+          },
+          {
+            "name": "Quezon Avenue",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "north": [[1]],
+              "south": [[4]]
+            }
+          },
+          {
+            "name": "GMA-Kamuning",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "north": [[3]],
+              "south": [[2]]
+            }
+          },
+          {
+            "name": "Araneta Center-Cubao",
+            "platformType": "Side",
+            "exits": [
+              "Farmers Plaza North",
+              "Farmers Plaza South / Farmers Market / Arayat Market"
+            ],
+            "exitMap": {
+              "north": [[1,2],[3,4]],
+              "south": [[3,4],[1,2]]
+            }
+          },
+          {
+            "name": "Santolan-Annapolis",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "north": [[4]],
+              "south": [[1]]
+            }
+          },
+          {
+            "name": "Ortigas",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "north": [[3]],
+              "south": [[2]]
+            }
+          },
+          {
+            "name": "Shaw Boulevard",
+            "platformType": "Island",
+            "exits": [
+              "Shangri-La Plaza / Starmall EDSA",
+              "EDSA Central / Greenfield District"
+            ],
+            "exitMap": {
+              "north": [[1,2],[3,4]],
+              "south": [[3,4],[1,2]]
+            }
+          },
+          {
+            "name": "Boni",
+            "platformType": "Island",
+            "exits": [
+              "GA Tower / SM Light",
+              "Pinatubo St / Pioneer Woodlands"
+            ],
+            "exitMap": {
+              "north": [[1,2],[3,4]],
+              "south": [[2,3],[1,2]]
+            }
+          },
+          {
+            "name": "Guadalupe",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "north": [[4]],
+              "south": [[1]]
+            }
+          },
+          {
+            "name": "Buendia",
+            "platformType": "Island",
+            "exits": [],
+            "exitMap": {
+              "north": [[1]],
+              "south": [[4]]
+            }
+          },
+          {
+            "name": "Ayala",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "north": [[1,2,3]],
+              "south": [[1,2,3]]
+            }
+          },
+          {
+            "name": "Magallanes",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "north": [[4]],
+              "south": [[1]]
+            }
+          },
+          {
+            "name": "Taft Avenue",
+            "platformType": "Island",
+            "exits": [],
+            "exitMap": {
+              "north": [[]],
+              "south": [[1,2]]
+            }
+          }
+      ]
+    }
+]

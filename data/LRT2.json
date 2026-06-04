@@ -1,0 +1,129 @@
+[
+    {
+        "line": "LRT-2",
+        "numberOfCars": [4],
+        "directions": ["west", "east"],
+        "stations": [
+          {
+            "name": "Recto",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "west": [[1,3,4]],
+              "east": [[]]
+            }
+          },
+          {
+            "name": "Legarda",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "west": [[1,2]],
+              "east": [[1,3,4]]
+            }
+          },
+          {
+            "name": "Pureza",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "west": [[1,2,4]],
+              "east": [[1,3,4]]
+            }
+          },
+          {
+            "name": "V. Mapa",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "west": [[1,2,4]],
+              "east": [[1,3,4]]
+            }
+          },
+          {
+            "name": "J. Ruiz",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "west": [[1,3,4]],
+              "east": [[1,2,4]]
+            }
+          },
+          {
+            "name": "Gilmore",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "west": [[1,3,4]],
+              "east": [[1,3,4]]
+            }
+          },
+          {
+            "name": "Betty Go-Belmonte",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "west": [[1,3,4]],
+              "east": [[1,2,4]]
+            }
+          },
+          {
+            "name": "Araneta Center-Cubao",
+            "platformType": "Side",
+            "exits": [
+              "Diamond Arcade / Gateway Mall 1",
+              "Gateway Mall 1"
+            ],
+            "exitMap": {
+              "west": [[1,2],[3,4]],
+              "east": [[3,4],[1,2]]
+            }
+          },
+          {
+            "name": "Anonas",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "west": [[1,2,4]],
+              "east": [[1,3,4]]
+            }
+          },
+          {
+            "name": "Katipunan",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "west": [[3,4]],
+              "east": [[1,3,4]]
+            }
+          },
+          {
+            "name": "Santolan",
+            "platformType": "Island",
+            "exits": [],
+            "exitMap": {
+              "west": [[1,2,3,4]],
+              "east": [[1,2,3,4]]
+            }
+          },
+          {
+            "name": "Marikina-Pasig",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "west": [[1,3]],
+              "east": [[2,4]]
+            }
+          },
+          {
+            "name": "Antipolo",
+            "platformType": "Side",
+            "exits": [],
+            "exitMap": {
+              "west": [[]],
+              "east": [[1,2,4]]
+            }
+          }
+        ]
+    }
+]
