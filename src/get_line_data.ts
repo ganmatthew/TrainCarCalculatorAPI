@@ -9,7 +9,7 @@ const trainDataMap: Record<string, any> = {
 };
 
 function getLineData(line: string) {
-    return trainDataMap[line]
+    return trainDataMap[line][0]
 }
 
 export { getLineData }
