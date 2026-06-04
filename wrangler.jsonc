@@ -3,6 +3,7 @@
   "main": "src/workers.ts",
   "compatibility_date": "2026-06-04",
   "assets": {
+    "binding": "ASSETS",
     "directory": "./"
   }
 }
