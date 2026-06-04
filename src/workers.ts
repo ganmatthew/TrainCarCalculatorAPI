@@ -1,14 +1,15 @@
+import { getLineData } from "./get_line_data";
 import { calculateTrainCar } from "./calculate_train_car";
 
 function requireParam(url: URL, param: string) {
-    url.searchParams.get(param)
-    if (!param) {
+    const value = url.searchParams.get(param)
+    if (!value) {
         throw new Response(JSON.stringify({
             error: "Bad request",
             message: `Missing '${param}' parameter in query`
         }), { status: 400 });
     }
-    return param;
+    return value;
 }
 
 export default {
