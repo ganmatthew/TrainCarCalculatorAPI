@@ -1,0 +1,58 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #325241;
+  --ifm-color-primary-dark: #2d4a3b;
+  --ifm-color-primary-darker: #2b4637;
+  --ifm-color-primary-darkest: #23392e;
+  --ifm-color-primary-light: #375a48;
+  --ifm-color-primary-lighter: #3a5e4b;
+  --ifm-color-primary-lightest: #416b55;
+  --ifm-background-color: #ffffff;
+
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+[data-theme='dark'] {
+  --ifm-color-primary: #98e1ba;
+  --ifm-color-primary-dark: #7bd8a6;
+  --ifm-color-primary-darker: #6cd49d;
+  --ifm-color-primary-darkest: #40c77f;
+  --ifm-color-primary-light: #b5eace;
+  --ifm-color-primary-lighter: #c4eed7;
+  --ifm-color-primary-lightest: #f0fbf5;
+  --ifm-background-color: #202022;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+ .navbar {
+    background-color: var(--ifm-navbar-background-color);
+    box-shadow: var(--ifm-navbar-shadow);
+    height: var(--ifm-navbar-height);
+    padding: var(--ifm-navbar-padding-vertical)var(--ifm-navbar-padding-horizontal);
+    display: flex
+  }
+
+/* Button animations */
+
+.button.button--secondary.button--lg {
+  background-color: var(--ifm-color-primary-darkest);
+  border: var(--ifm-button-border-width) solid var(--ifm-color-primary-darkest);
+  color: var(--ifm-font-color-base-inverse);
+  transition: transform 150ms ease-in-out;
+}
+
+@media (hover: hover) {
+  .button.button--secondary.button--lg:hover {
+    transform: scale(1.02);
+  }
+}
+
+.button.button--secondary.button--lg:active {
+  transform: scale(0.96);
+}
