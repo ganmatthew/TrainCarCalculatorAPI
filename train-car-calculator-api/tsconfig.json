@@ -1,27 +1,12 @@
+// This file is not used by "docusaurus start/build" commands.
+// It is here to improve your IDE experience (type-checking, autocompletion...),
+// and can also run the package.json "typecheck" script manually.
 {
-	"compilerOptions": {
-		/* Base Options: */
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"target": "es2024",
-		"verbatimModuleSyntax": false,
-		"allowJs": true,
-		"resolveJsonModule": true,
-		"moduleDetection": "force",
-		/* Strictness */
-		"strict": true,
-		"noUncheckedIndexedAccess": true,
-		/* If NOT transpiling with TypeScript: */
-		"moduleResolution": "Bundler",
-		"module": "es2022",
-		"noEmit": true,
-		"lib": ["es2024"],
-		"types": [
-			"./worker-configuration.d.ts",
-			"@types/node",
-			"node"
-		]
-	},
-	"exclude": ["node_modules", "dist", "tests"],
-	"include": ["src", "worker-configuration.d.ts"]
+  "extends": "@docusaurus/tsconfig",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "strict": true
+  },
+  "exclude": [".docusaurus", "build"]
 }

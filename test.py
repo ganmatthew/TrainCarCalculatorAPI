@@ -1,6 +1,6 @@
 import requests
 
-url = f"http://127.0.0.1:8787/api/calculate"
+url = f"http://127.0.0.1:8787/api/get_train_cars"
 
 payload = {
     "line": "MRT3",
