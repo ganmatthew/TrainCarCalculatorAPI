@@ -34,7 +34,8 @@ export default {
 
           return new Response(JSON.stringify({ 
             success: false, 
-            error: "Bad Request: Invalid JSON payload" 
+            code: 400,
+            error: "Invalid JSON payload" 
           }), { 
             status: 400, 
             headers: { "Content-Type": "application/json" } 
@@ -42,7 +43,7 @@ export default {
         }
       }
 
-      return new Response(JSON.stringify({ error: "Endpoint not found" }), { 
+      return new Response(JSON.stringify({ success: false, error: "Endpoint not found", code: 404 }), { 
         status: 404, 
         headers: { "Content-Type": "application/json" }
       });

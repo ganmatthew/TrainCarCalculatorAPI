@@ -67,18 +67,19 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: 'Train Car Calculator API',
-      // logo: {
-      //   alt: 'Train Car Calculator Logo',
-      //   src: 'img/logo_light.png',
-      //   srcDark: 'img/logo_dark.png',
-      // },
+      logo: {
+        alt: 'Train Car Calculator Logo',
+        src: 'img/logo_light.png',
+        srcDark: 'img/logo_dark.png',
+        width: 100,
+        height: 100
+      },
       items: [
         {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Get Started',
         },
         // {to: '/blog', label: 'Blog', position: 'left'}
         // {
