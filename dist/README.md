@@ -1,0 +1,1 @@
+This folder contains the built output assets for the worker "train-car-calculator-api" generated at 2026-06-06T03:13:29.663Z.
