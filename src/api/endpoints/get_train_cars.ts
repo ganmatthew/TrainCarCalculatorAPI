@@ -80,7 +80,7 @@ function calculateTrainCar(
     // If not using 4-car, car 4 must be changed to car 3
     if (carConfig === 3) {
         if (carArr.includes(4)) {
-            const oldValue = carArr;
+            // const oldValue = carArr;
             carArr = filterAllowedTrainCars(carArr, 4, 3, 1, 3);
             // console.info(`Using 3-car config: Changed from ${oldValue} to ${carArr}`);
         } else {
