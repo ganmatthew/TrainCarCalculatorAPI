@@ -24,6 +24,7 @@
           },
           {
             "name": "GMA-Kamuning",
+            "aliases": ["Kamuning"],
             "platformType": "Side",
             "exits": [],
             "exitMap": {
@@ -33,6 +34,7 @@
           },
           {
             "name": "Araneta Center-Cubao",
+            "aliases": ["Cubao", "Araneta-Cubao"],
             "platformType": "Side",
             "exits": [
               "Farmers Plaza North",
@@ -45,6 +47,7 @@
           },
           {
             "name": "Santolan-Annapolis",
+            "aliases": ["Santolan", "Annapolis"],
             "platformType": "Side",
             "exits": [],
             "exitMap": {
@@ -63,6 +66,7 @@
           },
           {
             "name": "Shaw Boulevard",
+            "aliases": ["Shaw"],
             "platformType": "Island",
             "exits": [
               "Shangri-La Plaza / Starmall EDSA",

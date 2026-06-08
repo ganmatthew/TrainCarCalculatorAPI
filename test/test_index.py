@@ -1,40 +1,17 @@
 import unittest
-import requests
-import os
+from sample_request import get_train_cars
+from dotenv import load_dotenv
 import sys
 
+load_dotenv()
+
 USE_LOCAL = "--local" in sys.argv
-
-local_domain = "http://127.0.0.1:8787/api/"
-live_domain = "https://train-car-calculator-api.ganmatthew.workers.dev/api/"
-endpoint = "get_train_cars"
-
-def get_train_cars(payload: dict):
-    print(f"\nRequest:\n{payload}")
-
-    base_url = local_domain if USE_LOCAL else live_domain
-    url = f"{base_url}{endpoint}"
-    response = requests.post(url, json=payload)
-
-    print("Status code:", response.status_code)
-
-    try:
-        print(f"Response:\n{response.json()}")
-        return response.json()
-    except Exception:
-        # print(f"\nResponse text:\n{response.text}\n")
-        return {
-            "success": False,
-            "error": "Invalid JSON response",
-            "message": response.text,
-            "code": response.status_code,
-            "nearestCars": []
-        }
 
 class TrainCarsAPITest(unittest.TestCase):
 
     def test_valid(self):
         res = get_train_cars({
+            "inputType": "index",
             "line": "LRT1",
             "origin": 9,
             "destination": 18,
@@ -42,13 +19,14 @@ class TrainCarsAPITest(unittest.TestCase):
             "carConfig": 4,
             "priority": False,
             "sender": "test"
-        })
+        }, USE_LOCAL)
 
         self.assertTrue(res["success"])
         self.assertTrue(res["result"]["nearestCars"] == [4])
 
     def test_valid_exit(self):
         res = get_train_cars({
+            "inputType": "index",
             "line": "LRT1",
             "origin": 9,
             "destination": 18,
@@ -56,13 +34,14 @@ class TrainCarsAPITest(unittest.TestCase):
             "carConfig": 4,
             "priority": False,
             "sender": "test"
-        })
+        }, USE_LOCAL)
 
         self.assertTrue(res["success"])
         self.assertTrue(res["result"]["nearestCars"] == [2])
 
     def test_valid_exit_priority(self):
         res = get_train_cars({
+            "inputType": "index",
             "line": "LRT1",
             "origin": 9,
             "destination": 18,
@@ -70,13 +49,14 @@ class TrainCarsAPITest(unittest.TestCase):
             "carConfig": 4,
             "priority": True,
             "sender": "test"
-        })
+        }, USE_LOCAL)
 
         self.assertTrue(res["success"])
         self.assertTrue(res["result"]["nearestCars"] == [1])
 
     def test_valid_three_car(self):
         res = get_train_cars({
+            "inputType": "index",
             "line": "MRT3",
             "origin": 0,
             "destination": 1,
@@ -84,13 +64,14 @@ class TrainCarsAPITest(unittest.TestCase):
             "carConfig": 3,
             "priority": False,
             "sender": "test"
-        })
+        }, USE_LOCAL)
 
         self.assertTrue(res["success"])
         self.assertTrue(res["result"]["nearestCars"] == [3])
 
     def test_valid_four_car(self):
         res = get_train_cars({
+            "inputType": "index",
             "line": "MRT3",
             "origin": 0,
             "destination": 1,
@@ -98,22 +79,38 @@ class TrainCarsAPITest(unittest.TestCase):
             "carConfig": 4,
             "priority": False,
             "sender": "test"
-        })
+        }, USE_LOCAL)
 
         self.assertTrue(res["success"])
         self.assertTrue(res["result"]["nearestCars"] == [4])
 
-    def test_invalid_index(self):
+    def test_same_origin_destination(self):
         res = get_train_cars({
-            "line": "LRT1",
-            "origin": 999,
-            "destination": 1,
+            "inputType": "index",
+            "line": "MRT3",
+            "origin": 12,
+            "destination": 12,
             "exit": 0,
-            "carConfig": 4
-        })
+            "carConfig": 3,
+            "priority": False,
+            "sender": "test"
+        }, USE_LOCAL)
 
         self.assertFalse(res["success"])
-        self.assertEqual(res["code"], 500)
+        self.assertEqual(res["code"], 400)
+
+    def test_invalid_index(self):
+        res = get_train_cars({
+            "inputType": "index",
+            "line": "LRT1",
+            "origin": 25,
+            "destination": -25,
+            "exit": 0,
+            "carConfig": 4
+        }, USE_LOCAL)
+
+        self.assertFalse(res["success"])
+        self.assertEqual(res["code"], 400)
 
     def test_missing_body(self):
         res = get_train_cars(None)
