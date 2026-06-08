@@ -9,6 +9,7 @@ export type Car = number;
 
 export type Station = {
     name: string,
+    aliases: string[],
     platformType: string,
     exits: string[],
     exitMap: Record<string, Car[][]>

@@ -89,7 +89,7 @@ class TrainCarsAPITest(unittest.TestCase):
             "inputType": "station",
             "line": "MRT3",
             "origin": "Araneta-Cubao",
-            "destination": "Kamuning",
+            "destination": "GMA-Kamuning",
             "exit": 0,
             "carConfig": 3,
             "priority": False,

@@ -6,6 +6,7 @@
         "stations": [
           {
             "name": "Fernando Poe Jr",
+            "aliases": ["FPJ", "Roosevelt"],
             "platformType": "Side",
             "exits": [],
             "exitMap": {
@@ -24,6 +25,7 @@
           },
           {
             "name": "Monumento",
+            "aliases": ["Yamaha Monumento"],
             "platformType": "Side",
             "exits": [
               "E1: First North Luzon Transit",
@@ -117,6 +119,7 @@
           },
           {
             "name": "Central Terminal",
+            "aliases": ["Central"],
             "platformType": "Side",
             "exits": [
               "E1: Manila City Hall / Intramuros / Manila Hall of Justice",
@@ -233,6 +236,7 @@
           },
           {
             "name": "Redemptorist-Aseana",
+            "aliases": ["Redemptorist"],
             "platformType": "Side",
             "exits": [],
             "exitMap": {
@@ -242,6 +246,7 @@
           },
           {
             "name": "MIA Road",
+            "aliases": ["MIA"],
             "platformType": "Side",
             "exits": [],
             "exitMap": {
@@ -251,6 +256,7 @@
           },
           {
             "name": "PITX",
+            "aliases": ["Asia World"],
             "platformType": "Side",
             "exits": [],
             "exitMap": {
@@ -260,6 +266,7 @@
           },
           {
             "name": "Ninoy Aquino Avenue",
+            "aliases": ["Ninoy Aquino"],
             "platformType": "Side",
             "exits": [
               "E1: PUP Parañaque / Puregold Parañaque / S&R Parañaque",

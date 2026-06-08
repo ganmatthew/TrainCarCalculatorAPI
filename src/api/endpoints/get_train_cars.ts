@@ -11,9 +11,17 @@ class ValidationError extends Error {
     }
 }
 
-function getStationIndFromName(lineData: LineData, targetStation: string) {
+function getStationIndFromName(lineData: LineData, targetStation: string, checkAliases = true) {
     const exactMatchInd = lineData.stations.findIndex(station => station.name === targetStation)
-    if (exactMatchInd !== -1) { return exactMatchInd }
+    if (exactMatchInd !== -1) { return exactMatchInd; }
+
+    if (checkAliases) {
+        const aliasMatchInd = lineData.stations.findIndex(station =>
+            station.aliases?.includes(targetStation)
+        );
+        if (aliasMatchInd !== -1) { return aliasMatchInd; }
+    }
+
     return null;
 }
 
