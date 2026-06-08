@@ -1,6 +1,21 @@
+import { ZodError } from "zod";
+
 import { getLineData } from "../get_line_data";
 import { log } from "../logger";
-import { type Car, type LineData, type PayloadType } from "../types";
+import { Car, LineData, PayloadType } from "../types";
+
+class ValidationError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "ValidationError";
+    }
+}
+
+function getStationIndFromName(lineData: LineData, targetStation: string) {
+    const exactMatchInd = lineData.stations.findIndex(station => station.name === targetStation)
+    if (exactMatchInd !== -1) { return exactMatchInd }
+    return null;
+}
 
 function getTrainCarDiff(carArr: Car[], carConfig: Car) {
 	const fullSet = carConfig === 3 ? [1, 2, 3] : [1, 2, 3, 4];
@@ -15,7 +30,7 @@ function getTrainDirection(directions: string[], originInd: number, destinationI
 	} else if (directions.includes("west") && directions.includes("east")) {
 		return originInd < destinationInd ? 'east' : 'west';
 	} else {
-		throw new Error("The directions array is invalid or the origin/destination indices are out of range");
+		throw new ValidationError("The directions array is invalid or the origin/destination indices are out of range");
 	}
 }
 
@@ -28,28 +43,28 @@ function filterAllowedTrainCars(carArr: Car[], numToRemove: Car, newNum: Car, mi
 
 function calculateTrainCar(
     data: LineData,
-    originInd: number,
-    destInd: number,
-    exitValue: number,
+    originInd: number | null,
+    destInd: number | null,
+    exitValue: number | null,
     carConfig: number,
     getNearestCar = true,
     usePriorityCar = false,
+    inputType: string,
     sender = "") {
 
     const requestId = crypto.randomUUID();
 
     const line = data.line;
-    const stationsData = data.stations;
+    const stations = data.stations;
 
-    if (!stationsData) { throw new Error('Invalid data') }
+    if (originInd === null || destInd === null || originInd < 0 || destInd < 0 || originInd >= stations.length || destInd >= stations.length) {
+        throw new ValidationError(`Invalid station indices: Value must be in range [0, ${stations.length - 1}] for line ${line}`);
+    }
 
-    const origin = stationsData[originInd];
-    const destination = stationsData[destInd];
+    const origin = stations[originInd];
+    const destination = stations[destInd];
     
-    if (!origin || !destination) { throw new Error(`Invalid station indices: Value must be in range [0, ${stationsData.length - 1}]`); }
-    
-    const directions = data.directions;
-    const direction = getTrainDirection(directions, originInd, destInd);
+    const direction = getTrainDirection(data.directions, originInd, destInd);
 
     if (!direction) { throw new Error(`Missing line directions OR origin ${origin} and destination ${destination} are out of range`) }
 
@@ -59,12 +74,13 @@ function calculateTrainCar(
         throw new Error(`Cannot find exitMap of destination ${destination.name}`);
     }
 
-    if (!exitMap[exitValue]) {
-        throw new Error(`Invalid exit value: Value must be in range [0, ${exitMap.length - 1}]`);
+    if (exitValue === null || exitValue === undefined || !exitMap[exitValue]) {
+        throw new ValidationError(`Invalid exit value: Value must be in range [0, ${exitMap.length - 1}]`);
     }
 
     log(requestId, "INFO", "Processing request", {
         sender,
+        inputType,
         line,
         mode: getNearestCar ? "NearestExit" : "FurthestExit",
         origin: { name: origin.name, index: originInd },
@@ -75,7 +91,7 @@ function calculateTrainCar(
         usePriorityCar
     });
     
-    let carArr = exitMap[exitValue];
+    let carArr: number[] = exitMap[exitValue] ?? [];
     
     // If not using 4-car, car 4 must be changed to car 3
     if (carConfig === 3) {
@@ -89,11 +105,11 @@ function calculateTrainCar(
     } else if (carConfig === 4) {
         // console.info(`Using 4-car config: No changes made`);
     } else {
-        // throw new Error('Error in train car configuration checking condition')
+        throw new ValidationError(`Invalid carConfig value: Value must be in range [${data.numberOfCars}]`)
     }
 
     // Get furthest car instead if enabled
-    const carArrDiff = getNearestCar ? null : getTrainCarDiff(carArr, carConfig);
+    const carArrDiff = !getNearestCar ? getTrainCarDiff(carArr, carConfig) : undefined;
 
     if (usePriorityCar && carArrDiff && !carArrDiff.includes(1)) {
         carArrDiff.unshift(1);
@@ -118,8 +134,8 @@ function calculateTrainCar(
         throw new Error('Error in priority car checking condition')
     }
 
-    const carLabel = getNearestCar ? "carArrDiff" : "carArr"
-    const carValue = getNearestCar ? carArr : carArrDiff
+    const carLabel = getNearestCar ? "carArr" : "carArrDiff"
+    const carValue = getNearestCar ? carArr : (carArrDiff ?? []);
 
     log(requestId, "INFO", "Request successful", { carLabel: carLabel, carValue: carValue });
     
@@ -131,12 +147,31 @@ export function getTrainCars(params: PayloadType) {
         return { success: false, error: "Missing request body", code: 400 };
     }
 
-    const { line, origin, destination, exit, carConfig, priority, sender } = params;
+    const { line, exit, carConfig, priority, sender } = params;
     const lineData = getLineData(line);
 
     try {
+        const inputType = params.inputType;
+        let origin, destination;
+        
+        if (inputType === "station") {
+            origin = getStationIndFromName(lineData, params.origin);
+            destination = getStationIndFromName(lineData, params.destination);
+        } else {
+            origin = params.origin;
+            destination = params.destination;
+        }
+
+        if (origin === destination) {
+            return {
+                success: false,
+                error: "Origin and destination cannot be the same",
+                code: 400
+            }
+        }
+
         const [logId, carArr] = calculateTrainCar(
-            lineData, origin, destination, exit, carConfig, true, priority, sender
+            lineData, origin, destination, exit, carConfig, true, priority, inputType, sender
         );
 
         return {
@@ -146,6 +181,20 @@ export function getTrainCars(params: PayloadType) {
         };
 
     } catch (error) {
+        if (error instanceof ZodError) {
+            return {
+                success: false,
+                error: error.message,
+                code: 400
+            };
+        }
+        if (error instanceof ValidationError) {
+            return {
+                success: false,
+                error: error.message,
+                code: 400
+            };
+        };
         return {
             success: false,
             error: error instanceof Error ? error.message : "An unknown error occurred",

@@ -9,21 +9,25 @@ export default {
       
       if (request.method === 'POST' && url.pathname === '/api/get_train_cars') {
         try {
-          const body = await request.json();
-          const parsedData = Payload.safeParse(body);
+          const rawBody = await request.json();
+          const parsed = Payload.safeParse(rawBody);
           
-          if (!parsedData.success) {
+          if (!parsed.success) {
             return new Response(JSON.stringify({ 
               success: false, 
+              code: 400,
               error: "Invalid payload", 
-              issues: parsedData.error.issues 
+              issues: parsed.error.issues 
             }), {
               status: 400,
               headers: { "Content-Type": "application/json" }
             });
           }
+
+          const inputType = parsed.data.inputType;
+          console.log(`Inferred payload input type: '${inputType}'`);
           
-          const responseData = getTrainCars(parsedData.data);
+          const responseData = getTrainCars(parsed.data);
 
           return new Response(JSON.stringify(responseData), {
             status: responseData.code,
