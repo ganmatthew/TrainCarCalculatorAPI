@@ -6,10 +6,10 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "train-car-calculator-api",
 	"main": "src/worker.ts",
-	"compatibility_date": "2026-06-06",
+	"compatibility_date": "2026-08-08",
 	"assets": {
 		"directory": "./build",
-		"binding": "ASSETS"
+		// "binding": "ASSETS"
 	},
 	"observability": {
 		"enabled": false,

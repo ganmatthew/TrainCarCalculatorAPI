@@ -1,5 +1,6 @@
-import { getTrainCars } from "./api/endpoints/get_train_cars";
-import { Payload } from "./api/types";
+import { getTrainCars } from "./api/endpoints/getTrainCars";
+import { getStationExits } from "./api/endpoints/getStationExits";
+import { Payload, StationExitPayload } from "./api/types";
 
 export default {
   async fetch(request: Request, env: any, ctx: any) {
@@ -7,7 +8,7 @@ export default {
 
     if (url.pathname.startsWith('/api/')) {
       
-      if (request.method === 'POST' && url.pathname === '/api/get_train_cars') {
+      if (request.method === 'POST' && url.pathname === '/api/getTrainCars') {
         try {
           const rawBody = await request.json();
           const parsed = Payload.safeParse(rawBody);
@@ -42,7 +43,43 @@ export default {
             error: "Invalid JSON payload" 
           }), { 
             status: 400, 
-            headers: { "Content-Type": "application/json" } 
+            headers: { "Content-Type": "application/json" }
+          });
+        }
+      }
+
+      if (request.method === 'POST' && url.pathname === '/api/getStationExits') {
+        try {
+          const rawBody = await request.json();
+          const parsed = StationExitPayload.safeParse(rawBody);
+
+          if (!parsed.success) {
+            return new Response(JSON.stringify({
+              success: false,
+              code: 400,
+              error: "Invalid payload",
+              issues: parsed.error.issues
+            }), {
+              status: 400,
+              headers: { "Content-Type": "application/json" }
+            });
+          }
+
+          const responseData = getStationExits(parsed.data);
+
+          return new Response(JSON.stringify(responseData), {
+            status: responseData.code,
+            headers: { "Content-Type": "application/json" }
+          });
+
+        } catch (error) {
+          return new Response(JSON.stringify({ 
+            success: false, 
+            code: 400,
+            error: "Invalid JSON payload" 
+          }), { 
+            status: 400, 
+            headers: { "Content-Type": "application/json" }
           });
         }
       }

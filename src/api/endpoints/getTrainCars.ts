@@ -1,6 +1,6 @@
 import { ZodError } from "zod";
 
-import { getLineData } from "../get_line_data";
+import { getLineData } from "../getLineData";
 import { log } from "../logger";
 import { Car, LineData, PayloadType } from "../types";
 

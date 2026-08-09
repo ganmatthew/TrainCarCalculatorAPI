@@ -7,10 +7,9 @@ import sys
 load_dotenv()
 
 LOCAL_DOMAIN = os.getenv("LOCAL_DOMAIN")
-LIVE_DOMAIN = "https://train-car-calculator-api.ganmatthew.workers.dev"
-endpoint = "/api/get_train_cars"
+LIVE_DOMAIN = os.getenv("LIVE_DOMAIN")
 
-def get_train_cars(payload: dict, use_local=False):
+def request_api(payload: dict, endpoint: str, use_local=False):
     print(f"\nRequest:\n{payload}")
 
     base_url = LOCAL_DOMAIN if use_local else LIVE_DOMAIN
@@ -23,7 +22,6 @@ def get_train_cars(payload: dict, use_local=False):
         print(f"Response:\n{response.json()}")
         return response.json()
     except Exception:
-        # print(f"\nResponse text:\n{response.text}\n")
         return {
             "success": False,
             "error": "Invalid JSON response",
@@ -31,7 +29,15 @@ def get_train_cars(payload: dict, use_local=False):
             "code": response.status_code,
             "nearestCars": []
         }
-    
+
+
+def get_train_cars(payload: dict, use_local=False):
+    return request_api(payload, "/api/getTrainCars", use_local)
+
+
+def get_station_exits(payload: dict, use_local=False):
+    return request_api(payload, "/api/getStationExits", use_local)
+
 if __name__ == "__main__":
     payload = {
         "inputType": "index",

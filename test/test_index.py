@@ -1,5 +1,5 @@
 import unittest
-from sample_request import get_train_cars
+from sample_request import get_train_cars, get_station_exits
 from dotenv import load_dotenv
 import sys
 
@@ -84,6 +84,19 @@ class TrainCarsAPITest(unittest.TestCase):
         self.assertTrue(res["success"])
         self.assertTrue(res["result"]["nearestCars"] == [4])
 
+    def test_get_station_exits_index(self):
+        res = get_station_exits({
+            "inputType": "index",
+            "line": "LRT2",
+            "origin": 6,
+            "destination": 7,
+            "sender": "test"
+        }, USE_LOCAL)
+
+        self.assertTrue(res["success"])
+        self.assertEqual(res["result"]["exits"][0]["index"], 0)
+        self.assertEqual(res["result"]["exits"][1]["index"], 1)
+
     def test_same_origin_destination(self):
         res = get_train_cars({
             "inputType": "index",
@@ -113,7 +126,7 @@ class TrainCarsAPITest(unittest.TestCase):
         self.assertEqual(res["code"], 400)
 
     def test_missing_body(self):
-        res = get_train_cars(None)
+        res = get_train_cars(None, USE_LOCAL)
 
         self.assertFalse(res["success"])
         self.assertEqual(res["code"], 400)

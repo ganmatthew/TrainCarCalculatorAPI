@@ -11,7 +11,7 @@ const config: Config = {
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
+    v4: false, // Improve compatibility with the upcoming Docusaurus v4
   },
 
   // Set the production url of your site here
@@ -75,9 +75,9 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
+          sidebarId: 'menuSidebar',
           position: 'left',
-          label: 'Get Started',
+          label: 'Docs',
         },
         // {to: '/blog', label: 'Blog', position: 'left'}
         // {
