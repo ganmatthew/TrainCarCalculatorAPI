@@ -34,6 +34,7 @@ def get_train_cars(payload: dict, use_local=False):
     
 if __name__ == "__main__":
     payload = {
+        "inputType": "index",
         "line": "LRT1",
         "origin": 9,
         "destination": 18,
