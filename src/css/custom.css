@@ -72,3 +72,16 @@
   color: var(--method-get-color);
   font-weight: 600;
 }
+
+.station-table td {
+  line-height: 1.25;
+}
+
+.station-table td:nth-child(2) {
+  min-width: 9em;
+}
+
+.station-table td:nth-child(6),
+.station-table td:nth-child(7) {
+    white-space: nowrap;
+}

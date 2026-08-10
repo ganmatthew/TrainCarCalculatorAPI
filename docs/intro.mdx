@@ -8,7 +8,7 @@ The Train Car Calculator API determines the nearest train car(s) for a selected 
 
 ## Get Train Cars
 
-<code><span className="method-post">POST</span> /api/getTrainCars</code>
+<code><span className="method-post">POST</span> /api/v1/getTrainCars</code>
 
 **Content-Type:** `application/json`
 
@@ -18,18 +18,22 @@ Returns a list of the nearest train cars for the specified route and destination
 
 The request body must be a JSON object with the following fields:
 
-| Field         | Type                         | Required | Description                                                                                                     |
-| ------------- | ---------------------------- | -------- | --------------------------------------------------------------------------------------------------------------- |
-| `inputType`   | `index`, `station`           | Yes      | Determines whether stations are specified by index or name/alias.                                               |
-| `line`        | `LRT1`, `LRT2`, `MRT3`       | Yes      | The train line.                                                                                                 |
-| `origin`      | `number`, `string`           | Yes      | Origin station index when `inputType` is `index`, or station name/alias when `inputType` is `station`.      |
-| `destination` | `number`, `string`           | Yes      | Destination station index when `inputType` is `index`, or station name/alias when `inputType` is `station`. |
-| `exit`        | `number`                     | Yes      | Zero-based exit number for the destination platform. The first exit is `0`.                                     |
-| `carConfig`   | `number`                     | Yes      | Number of cars in the train configuration.                                                                      |
-| `priority`    | `boolean`                    | Yes      | Whether priority seating/car placement should be considered.                                                    |
-| `sender`      | `string`                     | No       | Optional identifier for the request. Maximum length is 30 characters.                                           |
+| Field         | Type                         | Constraints            | Required | Description                                                                                                                               |
+| ------------- | ---------------------------- | ---------------------- | ---------|------------------------------------------------------------------------------------------------------------------------------------------ |
+| `inputType`   | `string`                     | `index`, `station`     | Yes      | Determines whether stations are specified by index or name/alias.                                                                         |
+| `line`        | `string`                     | `LRT1`, `LRT2`, `MRT3` | Yes      | The train line.                                                                                                                           |
+| `origin`      | `number`, `string`           | *See reference data*   | Yes      | Origin station index when `inputType` is `index`, or station name/alias when `inputType` is `station`.                                    |
+| `destination` | `number`, `string`           | *See reference data*   | Yes      | Destination station index when `inputType` is `index`, or station name/alias when `inputType` is `station`.                               |
+| `exit`        | `number`                     | *See reference data*   | No       | Zero-based exit number for the destination platform. The first exit is `0`. Default value is `0`, which is either the first or only exit. |
+| `carConfig`   | `number`                     | *See reference data*   | Yes      | Number of cars in the train configuration.                                                                                                |
+| `priority`    | `boolean`                    | *See reference data*   | No       | Whether priority seating/car placement should be considered. Default value is `false`.                                                    |
+| `sender`      | `string`                     | 30 chars max           | No       | Optional identifier for the request. Maximum length is 30 characters.                                                                     |
 
-When `inputType` is `"station"`, station lookups support both official station names and known aliases.
+The API supports sending `origin` and `destination` either by station name or by station index.
+* When `inputType` is `"index"`, both `origin` and `destination` must be zero-based integers.
+* When `inputType` is `"station"`, both `origin` and `destination` must be exact station names.
+
+The average latency per request is around 200-250 ms for `index` and 250-350 ms for `station`.
 
 You may check each line's reference data in the sidebar or at the links below for their value constraints and exit numbers:
 
@@ -37,7 +41,7 @@ You may check each line's reference data in the sidebar or at the links below fo
 * [LRT-2](/docs/reference/lrt-2)
 * [MRT-3](/docs/reference/mrt-3)
 
-### Example Request: Station Names
+### Example: Request using Station Names
 
 ```json
 {
@@ -52,7 +56,7 @@ You may check each line's reference data in the sidebar or at the links below fo
 }
 ```
 
-### Example Request: Station Indices
+### Example: Request using Station Indices
 
 ```json
 {
@@ -85,13 +89,13 @@ A successful request returns the nearest train car numbers.
 
 ## Get Station Exits
 
-<code><span className="method-get">GET</span> /api/getStationExits</code>
+<code><span className="method-post">POST</span> /api/v1/getStationExits</code>
 
 **Content-Type:** `application/json`
 
 Returns the available exits for the destination station, including their zero-based exit indices.
 
-Use this endpoint to determine the `exit` value to pass to the [`/api/getTrainCars`](#get-train-cars) endpoint.
+Use this endpoint to determine the `exit` value to pass to the [`/api/v1/getTrainCars`](#get-train-cars) endpoint.
 
 ### Request Body
 
@@ -105,7 +109,7 @@ The request body accepts the following fields:
 | `destination` | `number`, `string`           | Yes      | Destination station index or station name/alias, depending on `inputType`. |
 | `sender`      | `string`                     | No       | Optional identifier for the request.                                       |
 
-### Example Request: Station Names
+### Example: Request using Station Names
 
 ```json
 {
@@ -117,7 +121,7 @@ The request body accepts the following fields:
 }
 ```
 
-### Example Request: Station Indices
+### Example: Request using Station Indices
 
 ```json
 {

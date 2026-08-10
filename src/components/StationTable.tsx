@@ -14,17 +14,27 @@ function formatExitValues(exits: string[]) {
 		return '-';
 	}
 	return exits.map((exit, index) => (
-  	<React.Fragment key={index}>
-			<code>{index}</code>: {exit} {index < exits.length - 1 && ( <> <br /> <br /> </> )}
+		<React.Fragment key={index}>
+			<code>{index}</code>: <i>{exit}</i> {index < exits.length - 1 && ( <> <br /> <br /> </> )}
 		</React.Fragment>
 	));
 }
 
-function formatDirectionMap(dirMap: number[]) {
+function formatDirectionMap(dirMap: number[][]) {
 	if (!dirMap || dirMap.length === 0) {
 		return "-"
 	}
-  	return JSON.stringify(dirMap);
+  	return dirMap.map((value, index) => (
+		<React.Fragment key={index}>
+			<code>{index}</code>: {JSON.stringify(value)}
+			{index < dirMap.length - 1 && (
+				<>
+					<br />
+					<br />
+				</>
+			)}
+		</React.Fragment>
+	));
 }
 
 export default function StationTable({ lineData }: StationTableProps) {
@@ -57,7 +67,7 @@ export default function StationTable({ lineData }: StationTableProps) {
 				</li>
 			</ul>
 
-			<table>
+			<table className="station-table">
 				<thead>
 					<tr>
 						<th rowSpan={2}>Index</th>
@@ -75,8 +85,8 @@ export default function StationTable({ lineData }: StationTableProps) {
 				<tbody>
 					{lineData.stations.map((station: Station, stationIndex: number) => {
 						const exits = station.exits ?? [];
-						const directionMapA = station.exitMap?.[directionA]?.[0];
-						const directionMapB = station.exitMap?.[directionB]?.[0];
+						const directionMapA = station.exitMap?.[directionA];
+						const directionMapB = station.exitMap?.[directionB];
 						return (
 							<tr key={`${station.name}-${stationIndex}`}>
 								<td>{stationIndex}</td>

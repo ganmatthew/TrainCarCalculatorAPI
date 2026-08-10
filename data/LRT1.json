@@ -5,7 +5,7 @@
         "directions": ["north", "south"],
         "stations": [
           {
-            "name": "Fernando Poe Jr",
+            "name": "Fernando Poe Jr.",
             "aliases": ["FPJ", "Roosevelt"],
             "platformType": "Side",
             "exits": [],

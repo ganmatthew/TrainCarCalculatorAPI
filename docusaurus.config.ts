@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Train Car Calculator API',
-  tagline: 'Get the nearest or furthest train car to your destination!',
+  tagline: 'An API for getting the nearest train car to your destination in the Philippines.',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -78,13 +78,7 @@ const config: Config = {
           sidebarId: 'menuSidebar',
           position: 'left',
           label: 'Docs',
-        },
-        // {to: '/blog', label: 'Blog', position: 'left'}
-        // {
-        //   href: 'https://github.com/facebook/docusaurus',
-        //   label: 'GitHub',
-        //   position: 'right',
-        // },
+        }
       ],
     },
     footer: {

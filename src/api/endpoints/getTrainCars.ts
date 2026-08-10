@@ -82,8 +82,12 @@ function calculateTrainCar(
         throw new Error(`Cannot find exitMap of destination ${destination.name}`);
     }
 
-    if (exitValue === null || exitValue === undefined || !exitMap[exitValue]) {
-        throw new ValidationError(`Invalid exit value: Value must be in range [0, ${exitMap.length - 1}]`);
+    if (exitMap.length === 1) {
+        exitValue = 0;
+    } else if (exitValue === null || exitValue === undefined || exitValue < 0 || exitValue >= exitMap.length) {
+        throw new ValidationError(
+            `Invalid exit value: Value must be in range [0, ${exitMap.length - 1}]`
+        );
     }
 
     log(requestId, "INFO", "Processing request", {

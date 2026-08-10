@@ -8,7 +8,7 @@
 	"main": "src/worker.ts",
 	"compatibility_date": "2026-08-08",
 	"assets": {
-		"directory": "./build",
+		"directory": "./build"
 		// "binding": "ASSETS"
 	},
 	"observability": {

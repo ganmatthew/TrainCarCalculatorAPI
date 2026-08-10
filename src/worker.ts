@@ -8,7 +8,7 @@ export default {
 
     if (url.pathname.startsWith('/api/')) {
       
-      if (request.method === 'POST' && url.pathname === '/api/getTrainCars') {
+      if (request.method === 'POST' && url.pathname === '/api/v1/getTrainCars') {
         try {
           const rawBody = await request.json();
           const parsed = Payload.safeParse(rawBody);
@@ -48,7 +48,7 @@ export default {
         }
       }
 
-      if (request.method === 'POST' && url.pathname === '/api/getStationExits') {
+      if (request.method === 'POST' && url.pathname === '/api/v1/getStationExits') {
         try {
           const rawBody = await request.json();
           const parsed = StationExitPayload.safeParse(rawBody);
