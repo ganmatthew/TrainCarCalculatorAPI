@@ -1,0 +1,24 @@
+---
+sidebar_position: 2
+title: LRT-1
+label: boo
+description: Station, exit, and exit-map reference for the LRT-1 API data.
+---
+
+# LRT-1 Station and Exit Reference
+
+import lineDataItems from '@site/data/LRT1';
+import StationTable from '@site/src/components/StationTable';
+
+## Data Table
+
+This page renders the same station and exit data used by the API endpoints.
+
+<StationTable lineData={lineDataItems[0]} />
+
+## API Notes
+
+- The `line` field is case-insensitive and supports the values listed under `aliases`.
+- Use station names or aliases in the `origin` and `destination` fields when `inputType` is `station`.
+- The exit values shown here are the zero-based values for the `exit` field used by the train-car endpoint.
+- Empty arrays in the exit-map columns mean there is no recommended car-group for that station, direction, and exit combination.

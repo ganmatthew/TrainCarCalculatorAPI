@@ -1,11 +1,12 @@
 [
     {   
         "line": "LRT-1",
+        "aliases": ["LRT-1", "LRT1", "1"],
         "numberOfCars": [4],
         "directions": ["north", "south"],
         "stations": [
           {
-            "name": "Fernando Poe Jr",
+            "name": "Fernando Poe Jr.",
             "aliases": ["FPJ", "Roosevelt"],
             "platformType": "Side",
             "exits": [],

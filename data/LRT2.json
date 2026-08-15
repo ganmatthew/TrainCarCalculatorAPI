@@ -1,6 +1,7 @@
 [
     {
         "line": "LRT-2",
+        "aliases": ["LRT-2", "LRT2", "2"],
         "numberOfCars": [4],
         "directions": ["west", "east"],
         "stations": [

@@ -17,6 +17,9 @@
 
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  --method-post-color: #3f9c6a;
+  --method-get-color: #3f7d9c;
 }
 [data-theme='dark'] {
   --ifm-color-primary: #98e1ba;
@@ -28,6 +31,9 @@
   --ifm-color-primary-lightest: #f0fbf5;
   --ifm-background-color: #202022;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+
+  --method-post-color: #2fe383;
+  --method-get-color: #2f9be3;
 }
 
  .navbar {
@@ -55,4 +61,27 @@
 
 .button.button--secondary.button--lg:active {
   transform: scale(0.96);
+}
+
+.method-post {
+  color: var(--method-post-color);
+  font-weight: 600;
+}
+
+.method-get {
+  color: var(--method-get-color);
+  font-weight: 600;
+}
+
+.station-table td {
+  line-height: 1.25;
+}
+
+.station-table td:nth-child(2) {
+  min-width: 9em;
+}
+
+.station-table td:nth-child(6),
+.station-table td:nth-child(7) {
+    white-space: nowrap;
 }

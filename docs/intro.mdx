@@ -1,8 +1,155 @@
 ---
 sidebar_position: 1
 title: Introduction
+description: API reference for finding the nearest train cars and station exits across supported Philippine railway lines.
 ---
 
-# Getting Started
+The Train Car Calculator API determines the nearest train car(s) for a selected train line, origin station, destination station, and destination exit.
 
-Coming soon!
+## Get Train Cars
+
+<code><span className="method-post">POST</span> /api/v1/getTrainCars</code>
+
+**Content-Type:** `application/json`
+
+Returns a list of the nearest train cars for the specified route and destination exit.
+
+### Request Body
+
+The request body must be a JSON object with the following fields:
+
+| Field         | Type                         | Constraints            | Required | Description                                                                                                                               |
+| ------------- | ---------------------------- | ---------------------- | ---------|------------------------------------------------------------------------------------------------------------------------------------------ |
+| `inputType`   | `string`                     | `index`, `station`     | Yes      | Determines whether stations are specified by index or name/alias.                                                                         |
+| `line`        | `string`                     | `LRT1`, `LRT2`, `MRT3` | Yes      | The train line.                                                                                                                           |
+| `origin`      | `number`, `string`           | *See reference data*   | Yes      | Origin station index when `inputType` is `index`, or station name/alias when `inputType` is `station`.                                    |
+| `destination` | `number`, `string`           | *See reference data*   | Yes      | Destination station index when `inputType` is `index`, or station name/alias when `inputType` is `station`.                               |
+| `exit`        | `number`                     | *See reference data*   | No       | Zero-based exit number for the destination platform. The first exit is `0`. Default value is `0`, which is either the first or only exit. |
+| `carConfig`   | `number`                     | *See reference data*   | Yes      | Number of cars in the train configuration.                                                                                                |
+| `priority`    | `boolean`                    | *See reference data*   | No       | Whether priority seating/car placement should be considered. Default value is `false`.                                                    |
+| `sender`      | `string`                     | 30 chars max           | No       | Optional identifier for the request. Maximum length is 30 characters.                                                                     |
+
+The API supports sending `origin` and `destination` either by station name or by station index.
+* When `inputType` is `"index"`, both `origin` and `destination` must be zero-based integers.
+* When `inputType` is `"station"`, both `origin` and `destination` must be exact station names.
+
+The average latency per request is around 200-250 ms for `index` and 250-350 ms for `station`.
+
+You may check each line's reference data in the sidebar or at the links below for their value constraints and exit numbers:
+
+* [LRT-1](/docs/reference/lrt-1)
+* [LRT-2](/docs/reference/lrt-2)
+* [MRT-3](/docs/reference/mrt-3)
+
+### Example: Request using Station Names
+
+```json
+{
+  "inputType": "station",
+  "line": "LRT1",
+  "origin": "EDSA",
+  "destination": "Vito Cruz",
+  "exit": 0,
+  "carConfig": 4,
+  "priority": false,
+  "sender": "example"
+}
+```
+
+### Example: Request using Station Indices
+
+```json
+{
+  "inputType": "index",
+  "line": "LRT1",
+  "origin": 15,
+  "destination": 18,
+  "exit": 0,
+  "carConfig": 4,
+  "priority": false,
+  "sender": "example"
+}
+```
+
+### Response
+
+A successful request returns the nearest train car numbers.
+
+```json
+{
+  "success": true,
+  "result": {
+    "nearestCars": [2, 3]
+  },
+  "code": 200
+}
+```
+
+---
+
+## Get Station Exits
+
+<code><span className="method-post">POST</span> /api/v1/getStationExits</code>
+
+**Content-Type:** `application/json`
+
+Returns the available exits for the destination station, including their zero-based exit indices.
+
+Use this endpoint to determine the `exit` value to pass to the [`/api/v1/getTrainCars`](#get-train-cars) endpoint.
+
+### Request Body
+
+The request body accepts the following fields:
+
+| Field         | Type                         | Required | Description                                                                |
+| ------------- | ---------------------------- | -------- | -------------------------------------------------------------------------- |
+| `inputType`   | `index`, `station`           | Yes      | Determines whether stations are specified by index or name/alias.          |
+| `line`        | `LRT-1`, `LRT-2`, `MRT-3`    | Yes      | The train line.                                                            |
+| `origin`      | `number`, `string`           | Yes      | Origin station index or station name/alias, depending on `inputType`.      |
+| `destination` | `number`, `string`           | Yes      | Destination station index or station name/alias, depending on `inputType`. |
+| `sender`      | `string`                     | No       | Optional identifier for the request.                                       |
+
+### Example: Request using Station Names
+
+```json
+{
+  "inputType": "station",
+  "line": "LRT2",
+  "origin": "Betty Go-Belmonte",
+  "destination": "Araneta Center-Cubao",
+  "sender": "example"
+}
+```
+
+### Example: Request using Station Indices
+
+```json
+{
+  "inputType": "index",
+  "line": "LRT2",
+  "origin": 6,
+  "destination": 7,
+  "sender": "example"
+}
+```
+
+### Example Response
+
+```json
+{
+  "success": true,
+  "result": {
+    "exits": [
+      { "index": 0, "name": "Diamond Arcade / Gateway Mall 1" },
+      { "index": 1, "name": "Gateway Mall 1" }
+    ]
+  },
+  "code": 200
+}
+```
+
+---
+
+## Errors
+
+The API returns HTTP `400` when the request contains invalid JSON, invalid fields, or unsupported values. If the endpoint path does not exist, the API returns HTTP `404`.

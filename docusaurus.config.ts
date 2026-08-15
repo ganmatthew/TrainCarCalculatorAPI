@@ -6,12 +6,12 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Train Car Calculator API',
-  tagline: 'Get the nearest or furthest train car to your destination!',
+  tagline: 'An API for getting the nearest train car to your destination in the Philippines.',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
+    v4: false, // Improve compatibility with the upcoming Docusaurus v4
   },
 
   // Set the production url of your site here
@@ -75,16 +75,10 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
+          sidebarId: 'menuSidebar',
           position: 'left',
-          label: 'Get Started',
-        },
-        // {to: '/blog', label: 'Blog', position: 'left'}
-        // {
-        //   href: 'https://github.com/facebook/docusaurus',
-        //   label: 'GitHub',
-        //   position: 'right',
-        // },
+          label: 'Docs',
+        }
       ],
     },
     footer: {
@@ -106,10 +100,10 @@ const config: Config = {
               label: 'LRT/MRT Train Car Calculator',
               href: 'https://ganmatthew.github.io/train-car-calculator',
             },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/ganmatthew/TrainCarCalculatorAPI',
-            },
+            // {
+            //   label: 'GitHub',
+            //   href: 'https://github.com/ganmatthew/TrainCarCalculatorAPI',
+            // },
           ],
         }
       ],

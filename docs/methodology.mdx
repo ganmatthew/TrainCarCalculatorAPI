@@ -1,0 +1,69 @@
+---
+sidebar_position: 2
+title: Data Methodology
+description: Data explainer for an API that finds the nearest train cars and station exits across supported Philippine railway lines.
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+The Train Car Calculator API uses a station-level mapping for each train line that describes which train cars are closest to each station exit. For each station, the map takes into account the direction of travel and, where applicable, the specific exit being used. This allows the API to return the train car or cars that should put a passenger closest to their destination exit.
+
+By default, all stations have one exit per direction except for end stations which only have an exit for the direction towards said station.
+
+For stations with multiple exits, the criteria for a station exit was determined based on nearby landmarks that tries to match official wayfinding signage but may defer to popular landmarks if they are much more understood or helpful for users.
+
+The underlying dataset was generated through the following methodology:
+
+## Satellite Method
+
+For most stations, the data was collected by analyzing the satellite imagery of the station roofs on tools such as Google Maps. Using this, we can estimate where each train car stops by dividing the length of a station into three or four sections (depending on the typical train car configuration for the line), with each section representing the approximate stopping position of one train car.
+
+Given this, we can estimate where each station's exits are located per platform. These features are often visible from satellite imagery and provide useful reference points for determining which part of the platform is closest to a particular exit. We can then determine which train car is nearest to the exit based on which partition is closest to the exit.
+
+This process is then repeated for every station exit, since the closest train car to the exit can be different depending on which exit a passenger needs to reach.
+
+The resulting data is an estimate based on the physical layout of the stations and the approximate stopping positions of the train cars. It is intended to provide a practical indication of which car a passenger should board to get as close as possible to their destination exit.
+
+## Sample Computation
+
+<figure style={{ maxWidth: '500px', margin: '1rem auto', textAlign: 'center' }}>
+  <img 
+    src={useBaseUrl('/img/edsa.png')} 
+    alt="Satellite footage on Google Maps of EDSA station on the LRT-1 with annotations dividing the station length into four for both directions and showing which partitions are closest to the identified station exits." 
+    style={{ width: '100%', height: 'auto' }} 
+  />
+  <figcaption style={{ fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-600)', marginTop: '0.5rem' }}>
+    The Satellite Method being applied to the EDSA LRT-1 station.
+  </figcaption>
+</figure>
+
+For example, using a top view of EDSA station, if the user is on the LRT-1 going southbound (blue) towards EDSA and wants to exit at E3 (lower left), the list of train cars closest to the nearest exit would be <code>[1]</code>, meaning just **Car 1**. However, since the first car is often reserved as exclusive for women, senior citizens, pregnant women, and people with disabilities, the nearest car available to everyone would then be <code>[2]</code>, or just **Car 2**.
+
+## Per-Line Information
+
+### LRT-1
+*View the data for LRT-1 [here](/docs/reference/lrt-1).*
+
+For LRT-1, the data for stations between Monumento and Dr. Santos was collected using the Satellite Method. On the other hand, data for Balintawak and Fernando Poe Jr. were obtained using Google Street View footage of the station interiors and validated during separate visits to both stations.
+
+The supported car configuration for LRT-1 is 4-car only. While the line has historically used 2-car and 3-car configurations for its first three generations, most trains run in 4-car configuration with 3-car configurations being extremely rare as of August 2026.
+
+The E-numbered station exit numbers were obtained using Google Street View footage of the station entrance and exits as they appeared on the ground level.
+
+### LRT-2
+*View the data for LRT-2 [here](/docs/reference/lrt-2).*
+
+Getting the data for LRT-2 required a much more hands-on approach as the Satellite Method method used for LRT-1 and MRT-3 were not possible as all LRT-2 stations have a much more uniform design where the concourses are all located above (for Katipunan) or below the platform level. This means estimating the location of the stairs, elevator, and escalators to said concourse level could not be done using satellite imagery alone.
+
+Due to this, data for LRT-2 was collected manually by going to every station platform in both directions and determining their locations based on the train cars that are nearest to the stairs, escalators (if present), and elevator when the train stops at the station. This was done in coordination with the [Light Rail Transit Authority](https://www.lrta.gov.ph/), who helped accommodate the ocular visit and whose department heads also provided direct feedback on the positive and negative implications of the Train Car Calculator.
+
+The LRT-2 is also unique compared to the other lines because it does not have a women-only car. Therefore, the computations for excluding cars if the passenger is not a priority passenger are excluded for LRT-2. 
+
+The supported car configuration for LRT-2 is 4-car only.
+
+### MRT-3
+*View the data for MRT-3 [here](/docs/reference/mrt-3).*
+
+For MRT-3, the data for nearly all of its stations from North Avenue to Taft Avenue were collected using the Satellite Method. On the other hand, data for Araneta Center-Cubao, Shaw Boulevard, Buendia, Ayala, and Taft Avenue were obtained using Google Street View footage of the station interiors and validated during separate visits to both stations.
+
+The supported car configurations for MRT_3 are 3-car and 4-car.
