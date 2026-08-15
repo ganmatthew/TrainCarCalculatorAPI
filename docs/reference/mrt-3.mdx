@@ -17,6 +17,7 @@ This page renders the same station and exit data used by the API endpoints.
 
 ## API Notes
 
+- The `line` field is case-insensitive and supports the values listed under `aliases`.
 - Use station names or aliases in the `origin` and `destination` fields when `inputType` is `station`.
 - The exit values shown here are the zero-based values for the `exit` field used by the train-car endpoint.
 - Empty arrays in the exit-map columns mean there is no recommended car-group for that station, direction, and exit combination.

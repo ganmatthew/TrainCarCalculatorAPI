@@ -12,7 +12,7 @@ class TrainCarsAPITest(unittest.TestCase):
     def test_valid(self):
         res = get_train_cars({
             "inputType": "index",
-            "line": "LRT1",
+            "line": "LRT-1",
             "origin": 9,
             "destination": 18,
             "exit": 0,
@@ -27,7 +27,7 @@ class TrainCarsAPITest(unittest.TestCase):
     def test_valid_exit(self):
         res = get_train_cars({
             "inputType": "index",
-            "line": "LRT1",
+            "line": "LRT-1",
             "origin": 9,
             "destination": 18,
             "exit": 2,
@@ -42,7 +42,7 @@ class TrainCarsAPITest(unittest.TestCase):
     def test_valid_exit_priority(self):
         res = get_train_cars({
             "inputType": "index",
-            "line": "LRT1",
+            "line": "1",
             "origin": 9,
             "destination": 18,
             "exit": 2,
@@ -57,7 +57,7 @@ class TrainCarsAPITest(unittest.TestCase):
     def test_valid_three_car(self):
         res = get_train_cars({
             "inputType": "index",
-            "line": "MRT3",
+            "line": "3",
             "origin": 0,
             "destination": 1,
             "exit": 0,
@@ -72,7 +72,7 @@ class TrainCarsAPITest(unittest.TestCase):
     def test_valid_four_car(self):
         res = get_train_cars({
             "inputType": "index",
-            "line": "MRT3",
+            "line": "mrt3",
             "origin": 0,
             "destination": 1,
             "exit": 0,
@@ -87,7 +87,7 @@ class TrainCarsAPITest(unittest.TestCase):
     def test_get_station_exits_index(self):
         res = get_station_exits({
             "inputType": "index",
-            "line": "LRT2",
+            "line": "lrt-2",
             "origin": 6,
             "destination": 7,
             "sender": "test"
@@ -107,6 +107,19 @@ class TrainCarsAPITest(unittest.TestCase):
             "carConfig": 3,
             "priority": False,
             "sender": "test"
+        }, USE_LOCAL)
+
+        self.assertFalse(res["success"])
+        self.assertEqual(res["code"], 400)
+
+    def test_invalid_line_alias(self):
+        res = get_train_cars({
+            "inputType": "index",
+            "line": "LRT Line 1",
+            "origin": 9,
+            "destination": 10,
+            "exit": 0,
+            "carConfig": 4
         }, USE_LOCAL)
 
         self.assertFalse(res["success"])

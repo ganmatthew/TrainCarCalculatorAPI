@@ -100,10 +100,10 @@ const config: Config = {
               label: 'LRT/MRT Train Car Calculator',
               href: 'https://ganmatthew.github.io/train-car-calculator',
             },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/ganmatthew/TrainCarCalculatorAPI',
-            },
+            // {
+            //   label: 'GitHub',
+            //   href: 'https://github.com/ganmatthew/TrainCarCalculatorAPI',
+            // },
           ],
         }
       ],

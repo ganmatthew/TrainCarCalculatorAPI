@@ -1,6 +1,7 @@
 [
     {
         "line": "MRT-3",
+        "aliases": ["MRT-3", "MRT3", "3"],
         "numberOfCars": [3, 4],
         "directions": ["north", "south"],
         "stations": [
