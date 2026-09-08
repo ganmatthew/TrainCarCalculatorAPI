@@ -1,15 +1,11 @@
 import { ZodError } from "zod";
 
 import { getLineData } from "../getLineData";
+import { validateLineData } from "../utils"
+
 import { log } from "../logger";
 import { Car, LineData, PayloadType } from "../types";
-
-class ValidationError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "ValidationError";
-    }
-}
+import { ValidationError } from "../errors"
 
 function getStationIndFromName(lineData: LineData, targetStation: string, checkAliases = true) {
     const exactMatchInd = lineData.stations.findIndex(station => station.name === targetStation)
@@ -32,16 +28,6 @@ function getTrainCarDiff(carArr: Car[], carConfig: Car) {
 	return filteredArr;
 }
 
-function getTrainDirection(directions: string[], originInd: number, destinationInd: number) {
-	if (directions.includes("north") && directions.includes("south")) {
-		return originInd < destinationInd ? 'south' : 'north';
-	} else if (directions.includes("west") && directions.includes("east")) {
-		return originInd < destinationInd ? 'east' : 'west';
-	} else {
-		throw new ValidationError("The directions array is invalid or the origin/destination indices are out of range");
-	}
-}
-
 function filterAllowedTrainCars(carArr: Car[], numToRemove: Car, newNum: Car, minNum: Car, maxNum: Car) {
 	let updatedCars = [...new Set(
 		carArr.map(num => num === numToRemove ? newNum : num)
@@ -58,28 +44,26 @@ function calculateTrainCar(
     getNearestCar = true,
     usePriorityCar = false,
     inputType: string,
+    directionOverride?: string,
     sender = "") {
 
     const requestId = crypto.randomUUID();
 
-    const line = data.line;
-    const stations = data.stations;
-
-    if (originInd === null || destInd === null || originInd < 0 || destInd < 0 || originInd >= stations.length || destInd >= stations.length) {
-        throw new ValidationError(`Invalid station indices: Value must be in range [0, ${stations.length - 1}] for line ${line}`);
-    }
-
-    const origin = stations[originInd];
-    const destination = stations[destInd];
-    
-    const direction = getTrainDirection(data.directions, originInd, destInd);
-
-    if (!direction) { throw new Error(`Missing line directions OR origin ${origin} and destination ${destination} are out of range`) }
+    const {
+		line, origin, destination, direction
+	} = validateLineData(
+		data.line,
+		data.stations,
+		originInd,
+		destInd,
+		data.directions,
+		directionOverride
+	)
 
     const exitMap = destination.exitMap[direction];
 
 	if (!exitMap) {
-        throw new Error(`Cannot find exitMap of destination ${destination.name}`);
+        throw new Error(`Cannot find exitMap of destination ${destination.name} for direction ${direction}`);
     }
 
     if (exitMap.length === 1) {
@@ -95,9 +79,10 @@ function calculateTrainCar(
         inputType,
         line,
         mode: getNearestCar ? "NearestExit" : "FurthestExit",
-        origin: { name: origin.name, index: originInd },
-        destination: { name: destination.name, index: destInd },
+        origin: origin ? { name: origin, index: originInd } : {},
+        destination: { name: destination, index: destInd },
         direction,
+        directionType: directionOverride ? "override" : "calculated",
         exitValue,
         carConfig,
         usePriorityCar
@@ -159,22 +144,29 @@ export function getTrainCars(params: PayloadType) {
         return { success: false, error: "Missing request body", code: 400 };
     }
 
-    const { line, exit, carConfig, priority, sender } = params;
+    const { line, exit, carConfig, priority, sender, inputType } = params;
     const lineData = getLineData(line);
 
     try {
-        const inputType = params.inputType;
-        let origin, destination;
+        let origin: number | null = null;
+        let destination: number | null = null;
+        let direction: string | undefined;
         
         if (inputType === "station") {
-            origin = getStationIndFromName(lineData, params.origin);
+            origin = params.origin !== undefined ? getStationIndFromName(lineData, params.origin) : null;
             destination = getStationIndFromName(lineData, params.destination);
+            direction = params.direction;
         } else {
-            origin = params.origin;
+            origin = params.origin ?? null;
             destination = params.destination;
+            direction = params.direction;
         }
 
-        if (origin === destination) {
+        if (destination === null) {
+            throw new ValidationError("Invalid destination")
+        }
+
+        if (origin !== null && origin === destination) {
             return {
                 success: false,
                 error: "Origin and destination cannot be the same",
@@ -183,7 +175,16 @@ export function getTrainCars(params: PayloadType) {
         }
 
         const [logId, carArr] = calculateTrainCar(
-            lineData, origin, destination, exit, carConfig, true, priority, inputType, sender
+            lineData,
+            origin,
+            destination,
+            exit,
+            carConfig,
+            true,
+            priority,
+            inputType,
+            direction,
+            sender
         );
 
         return {

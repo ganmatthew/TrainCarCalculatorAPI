@@ -126,6 +126,35 @@ class TrainCarsAPITest(unittest.TestCase):
         self.assertTrue(res["success"])
         self.assertEqual(res["result"]["exits"][0]["name"], "Diamond Arcade / Gateway Mall 1")
 
+    def test_no_origin_with_direction(self):
+        res = get_train_cars({
+            "inputType": "station",
+            "line": "MRT3",
+            "destination": "Quezon Avenue",
+            "direction": "north",
+            "exit": 0,
+            "carConfig": 3,
+            "priority": False,
+            "sender": "test"
+        }, USE_LOCAL)
+
+        self.assertTrue(res["success"])
+        self.assertTrue(res["result"]["nearestCars"] == [2])
+
+    def test_no_origin_without_direction(self):
+        res = get_train_cars({
+            "inputType": "station",
+            "line": "MRT3",
+            "destination": "Quezon Avenue",
+            "exit": 0,
+            "carConfig": 3,
+            "priority": False,
+            "sender": "test"
+        }, USE_LOCAL)
+
+        self.assertFalse(res["success"])
+        self.assertEqual(res["code"], 400)
+
     def test_invalid_line_alias(self):
         res = get_train_cars({
             "inputType": "station",

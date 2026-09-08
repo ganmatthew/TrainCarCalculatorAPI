@@ -47,27 +47,55 @@ const StationExitBasePayload = z.object({
 
 const IndexPayload = BasePayload.extend({
 	inputType: z.literal("index"),
-	origin: z.number().int().min(0),
-	destination: z.number().int().min(0)
-});
+	origin: z.number().int().min(0).optional(),
+	destination: z.number().int().min(0),
+	direction: z.string().min(1).optional()
+}).refine(
+	data => (data.origin !== undefined) !== (data.direction !== undefined),
+	{
+		message: "An origin or direction must be provided (but not both)",
+		path: ["origin"]
+	}
+);
 
 const StationPayload = BasePayload.extend({
 	inputType: z.literal("station"),
-	origin: z.string().min(1),
-	destination: z.string().min(1)
-});
+	origin: z.string().min(1).optional(),
+	destination: z.string().min(1),
+	direction: z.string().min(1).optional()
+}).refine(
+	data => (data.origin !== undefined) !== (data.direction !== undefined),
+	{
+		message: "An origin or direction must be provided (but not both)",
+		path: ["origin"]
+	}
+);
 
 const StationExitIndexPayload = StationExitBasePayload.extend({
 	inputType: z.literal("index"),
-	origin: z.number().int().min(0),
-	destination: z.number().int().min(0)
-});
+	origin: z.number().int().min(0).optional(),
+	destination: z.number().int().min(0),
+	direction: z.string().min(1).optional()
+}).refine(
+	data => (data.origin !== undefined) !== (data.direction !== undefined),
+	{
+		message: "An origin or direction must be provided (but not both)",
+		path: ["origin"]
+	}
+);
 
 const StationExitStationPayload = StationExitBasePayload.extend({
 	inputType: z.literal("station"),
-	origin: z.string().min(1),
-	destination: z.string().min(1)
-});
+	origin: z.string().min(1).optional(),
+	destination: z.string().min(1),
+	direction: z.string().min(1).optional()
+}).refine(
+	data => (data.origin !== undefined) !== (data.direction !== undefined),
+	{
+		message: "An origin or direction must be provided (but not both)",
+		path: ["origin"]
+	}
+);
 
 // const CoordinatePayload = BasePayload.extend({
 //     inputType: z.literal("coordinates"),

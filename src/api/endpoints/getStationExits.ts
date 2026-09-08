@@ -1,6 +1,8 @@
 import { ZodError } from "zod";
 
 import { getLineData } from "../getLineData";
+import { validateLineData } from "../utils";
+
 import { log } from "../logger";
 import { LineData, StationExitPayloadType } from "../types";
 
@@ -40,25 +42,21 @@ function calculateStationExits(
 	originInd: number | null,
 	destInd: number | null,
 	inputType: string,
+	directionOverride?: string,
 	sender = ""
 ) {
 	const requestId = crypto.randomUUID();
-	const line = data.line;
-	const stations = data.stations;
-
-	if (originInd === null || destInd === null || originInd < 0 || destInd < 0 || originInd >= stations.length || destInd >= stations.length) {
-		throw new ValidationError(`Invalid station indices: Value must be in range [0, ${stations.length - 1}] for line ${line}`);
-	}
-
-	if (originInd === destInd) {
-		throw new ValidationError("Origin and destination cannot be the same");
-	}
-
-	const origin = stations[originInd];
-	const destination = stations[destInd];
-	const direction = getTrainDirection(data.directions, originInd, destInd);
-
-	if (!direction) { throw new Error(`Missing line directions OR origin ${origin} and destination ${destination} are out of range`) }
+	
+	const {
+		line, origin, destination, direction
+	} = validateLineData(
+		data.line,
+		data.stations,
+		originInd,
+		destInd,
+		data.directions,
+		directionOverride
+	)
 
 	const exitMap = destination.exitMap[direction];
 
@@ -82,9 +80,10 @@ function calculateStationExits(
 		sender,
 		inputType,
 		line,
-		origin: { name: origin.name, index: originInd },
-		destination: { name: destination.name, index: destInd },
+		origin: origin ? { name: origin, index: originInd } : {},
+		destination: { name: destination, index: destInd },
 		direction,
+		directionType: directionOverride ? "override" : "calculated",
 		exits: stationExits
 	});
 
@@ -100,22 +99,38 @@ export function getStationExits(params: StationExitPayloadType) {
 	const lineData = getLineData(line);
 
 	try {
-		let origin, destination;
+		let origin: number | null = null;
+        let destination: number | null = null;
+        let direction: string | undefined;
 
 		if (inputType === "station") {
-			origin = getStationIndFromName(lineData, params.origin);
+			origin = params.origin !== undefined ? getStationIndFromName(lineData, params.origin) : null;
 			destination = getStationIndFromName(lineData, params.destination);
 		} else {
-			origin = params.origin;
-			destination = params.destination;
+			origin = params.origin ?? null;
+            destination = params.destination;
+            direction = params.direction;
 		}
+
+		if (destination === null) {
+            throw new ValidationError("Invalid destination")
+        }
+
+		if (origin !== null && origin === destination) {
+            return {
+                success: false,
+                error: "Origin and destination cannot be the same",
+                code: 400
+            }
+        }
 
 		const [logId, exits] = calculateStationExits(
 			lineData,
 			origin,
 			destination,
 			inputType,
-			sender
+			direction,
+			sender,
 		);
 
 		return {

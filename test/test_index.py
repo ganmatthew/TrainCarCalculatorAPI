@@ -112,6 +112,35 @@ class TrainCarsAPITest(unittest.TestCase):
         self.assertFalse(res["success"])
         self.assertEqual(res["code"], 400)
 
+    def test_no_origin_with_direction(self):
+        res = get_train_cars({
+            "inputType": "index",
+            "line": "MRT3",
+            "destination": 7,
+            "direction": "north",
+            "exit": 0,
+            "carConfig": 3,
+            "priority": False,
+            "sender": "test"
+        }, USE_LOCAL)
+
+        self.assertTrue(res["success"])
+        self.assertTrue(res["result"]["nearestCars"] == [2])
+
+    def test_no_origin_without_direction(self):
+            res = get_train_cars({
+                "inputType": "index",
+                "line": "MRT3",
+                "destination": 7,
+                "exit": 0,
+                "carConfig": 3,
+                "priority": False,
+                "sender": "test"
+            }, USE_LOCAL)
+    
+            self.assertFalse(res["success"])
+            self.assertEqual(res["code"], 400)
+
     def test_invalid_line_alias(self):
         res = get_train_cars({
             "inputType": "index",
