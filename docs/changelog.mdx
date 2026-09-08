@@ -1,0 +1,25 @@
+---
+title: Changelog
+description: Changelog describing changes and updates to the API.
+---
+
+# Changelog
+
+## 2026
+
+### 2026-09-09
+- Changed the GitHub repository's visibility to public.
+- Added changelog.
+- Both `getTrainCars` and `getStationExits` now support providing both `direction` and `destination` instead of `origin` and `destination`.
+- Minor fixes and improvements.
+
+### 2026-08-18
+- `getStationExits` should no longer return exits that are not applicable to the request data.
+
+### 2026-08-16
+- Added CORS headers.
+- CORS pre-flight requests will now return a `204 No Content` response.
+- Unexpected server-side errors will now return a `500 Internal Server Error` response.
+
+### 2026-08-10
+- Initial release of `v1` endpoints.

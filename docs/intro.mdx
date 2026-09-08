@@ -18,16 +18,17 @@ Returns a list of the nearest train cars for the specified route and destination
 
 The request body must be a JSON object with the following fields:
 
-| Field         | Type                         | Constraints            | Required | Description                                                                                                                               |
-| ------------- | ---------------------------- | ---------------------- | ---------|------------------------------------------------------------------------------------------------------------------------------------------ |
-| `inputType`   | `string`                     | `index`, `station`     | Yes      | Determines whether stations are specified by index or name/alias.                                                                         |
-| `line`        | `string`                     | `LRT1`, `LRT2`, `MRT3` | Yes      | The train line.                                                                                                                           |
-| `origin`      | `number`, `string`           | *See reference data*   | Yes      | Origin station index when `inputType` is `index`, or station name/alias when `inputType` is `station`.                                    |
-| `destination` | `number`, `string`           | *See reference data*   | Yes      | Destination station index when `inputType` is `index`, or station name/alias when `inputType` is `station`.                               |
-| `exit`        | `number`                     | *See reference data*   | No       | Zero-based exit number for the destination platform. The first exit is `0`. Default value is `0`, which is either the first or only exit. |
-| `carConfig`   | `number`                     | *See reference data*   | Yes      | Number of cars in the train configuration.                                                                                                |
-| `priority`    | `boolean`                    | *See reference data*   | No       | Whether priority seating/car placement should be considered. Default value is `false`.                                                    |
-| `sender`      | `string`                     | 30 chars max           | No       | Optional identifier for the request. Maximum length is 30 characters.                                                                     |
+| Field         | Type                         | Constraints            | Required | Description                                                                                                                                   |
+| ------------- | ---------------------------- | ---------------------- | ---------|---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `inputType`   | `string`                     | `index`, `station`     | Yes      | Determines whether stations are specified by index or name/alias.                                                                             |
+| `line`        | `string`                     | `LRT1`, `LRT2`, `MRT3` | Yes      | The train line.                                                                                                                               |
+| `origin`      | `number`, `string`           | *See reference data*   | Varies   | Origin station index when `inputType` is `index`, or station name/alias when `inputType` is `station`. Optional when `direction` is provided. |                                   |
+| `destination` | `number`, `string`           | *See reference data*   | Yes      | Destination station index when `inputType` is `index`, or station name/alias when `inputType` is `station`.                                   |
+| `direction`   | `string`                     | *See reference data*   | No       | Calculated by both `origin` and `destination`. Optional when `origin` is provided.                                                            |
+| `exit`        | `number`                     | *See reference data*   | No       | Zero-based exit number for the destination platform. The first exit is `0`. Default value is `0`, which is either the first or only exit.     |
+| `carConfig`   | `number`                     | *See reference data*   | Yes      | Number of cars in the train configuration.                                                                                                    |
+| `priority`    | `boolean`                    | *See reference data*   | No       | Whether priority seating/car placement should be considered. Default value is `false`.                                                        |
+| `sender`      | `string`                     | 30 chars max           | No       | Optional identifier for the request. Maximum length is 30 characters.                                                                         |
 
 The API supports sending `origin` and `destination` either by station name or by station index.
 * When `inputType` is `"index"`, both `origin` and `destination` must be zero-based integers.
@@ -41,7 +42,9 @@ You may check each line's reference data in the sidebar or at the links below fo
 * [LRT-2](/docs/reference/lrt-2)
 * [MRT-3](/docs/reference/mrt-3)
 
-### Example: Request using Station Names
+### Examples
+
+#### Request using Station Names
 
 ```json
 {
@@ -56,7 +59,22 @@ You may check each line's reference data in the sidebar or at the links below fo
 }
 ```
 
-### Example: Request using Station Indices
+#### Request using Destination Name + Direction
+
+```json
+{
+  "inputType": "station",
+  "line": "LRT1",
+  "destination": "Vito Cruz",
+  "direction": "north",
+  "exit": 0,
+  "carConfig": 4,
+  "priority": false,
+  "sender": "example"
+}
+```
+
+#### Request using Station Indices
 
 ```json
 {
@@ -71,9 +89,24 @@ You may check each line's reference data in the sidebar or at the links below fo
 }
 ```
 
-### Response
+#### Request using Destination Index + Direction
 
-A successful request returns the nearest train car numbers.
+```json
+{
+  "inputType": "index",
+  "line": "LRT1",
+  "destination": 18,
+  "direction": "north",
+  "exit": 0,
+  "carConfig": 4,
+  "priority": false,
+  "sender": "example"
+}
+```
+
+#### Example Response
+
+All examples above return the following nearest train car numbers:
 
 ```json
 {
@@ -101,15 +134,18 @@ Use this endpoint to determine the `exit` value to pass to the [`/api/v1/getTrai
 
 The request body accepts the following fields:
 
-| Field         | Type                         | Required | Description                                                                |
-| ------------- | ---------------------------- | -------- | -------------------------------------------------------------------------- |
-| `inputType`   | `index`, `station`           | Yes      | Determines whether stations are specified by index or name/alias.          |
-| `line`        | `LRT-1`, `LRT-2`, `MRT-3`    | Yes      | The train line.                                                            |
-| `origin`      | `number`, `string`           | Yes      | Origin station index or station name/alias, depending on `inputType`.      |
-| `destination` | `number`, `string`           | Yes      | Destination station index or station name/alias, depending on `inputType`. |
-| `sender`      | `string`                     | No       | Optional identifier for the request.                                       |
+| Field         | Type                         | Required | Description                                                                                                  |
+| ------------- | ---------------------------- | -------- | ------------------------------------------------------------------------------------------------------------ |
+| `inputType`   | `index`, `station`           | Yes      | Determines whether stations are specified by index or name/alias.                                            |
+| `line`        | `LRT-1`, `LRT-2`, `MRT-3`    | Yes      | The train line.                                                                                              |
+| `origin`      | `number`, `string`           | Varies   | Origin station index or station name/alias, depending on `inputType`. Optional when `direction` is provided. |
+| `destination` | `number`, `string`           | Yes      | Destination station index or station name/alias, depending on `inputType`.                                   |
+| `direction`   | `string`                     | No       | Calculated by both `origin` and `destination`. Optional when `origin` is provided.                           |                                                        |
+| `sender`      | `string`                     | No       | Optional identifier for the request.                                                                         |
 
-### Example: Request using Station Names
+### Examples
+
+#### Request using Station Names
 
 ```json
 {
@@ -121,7 +157,19 @@ The request body accepts the following fields:
 }
 ```
 
-### Example: Request using Station Indices
+#### Request using Destination Name + Direction
+
+```json
+{
+  "inputType": "station",
+  "line": "LRT2",
+  "destination": "Araneta Center-Cubao",
+  "direction": "east",
+  "sender": "example"
+}
+```
+
+#### Request using Station Indices
 
 ```json
 {
@@ -133,7 +181,21 @@ The request body accepts the following fields:
 }
 ```
 
-### Example Response
+#### Request using Destination Index + Direction
+
+```json
+{
+  "inputType": "index",
+  "line": "LRT2",
+  "destination": 7,
+  "direction": "east",
+  "sender": "example"
+}
+```
+
+#### Example Response
+
+All examples above return the following nearest train car numbers:
 
 ```json
 {
@@ -152,4 +214,6 @@ The request body accepts the following fields:
 
 ## Errors
 
-The API returns HTTP `400` when the request contains invalid JSON, invalid fields, or unsupported values. If the endpoint path does not exist, the API returns HTTP `404`.
+The API returns HTTP `400` when the request contains invalid JSON, invalid fields, or unsupported values. 
+
+If the endpoint path does not exist, the API returns HTTP `404`.

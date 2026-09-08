@@ -19,6 +19,7 @@ const sidebars: SidebarsConfig = {
     'intro',
     'methodology',
     'usage',
+    'changelog',
     {
       type: 'category',
       label: 'Reference',
