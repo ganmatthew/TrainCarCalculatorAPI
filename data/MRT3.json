@@ -10,7 +10,7 @@
             "platformType": "Side",
             "exits": [],
             "exitMap": {
-              "north": [[3]],
+              "north": [[2]],
               "south": [[]]
             }
           },
